@@ -1,0 +1,70 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f1efee; /* Soft warning red background */
+    margin: 0;
+}
+
+.navbar, footer {
+    background-color: #7f7877;
+    color: white;
+    padding: 15px 30px;
+}
+div{
+    margin: 15px;
+}
+.navbar a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+main {
+    background-color: white;
+    margin: 40px auto;
+    padding: 30px;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+
+form input[type="text"],
+form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+form input[type="submit"] {
+    background: #7f7877;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+form input[type="submit"]:hover {
+    background: #a93226;
+}
+
+footer {
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.success {
+    color: green;
+    text-align: center;
+}
+.error {
+    color: red;
+    text-align: center;
+}

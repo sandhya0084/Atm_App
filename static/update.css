@@ -1,0 +1,138 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #eaf2f8; /* Soft blue tone */
+    margin: 0;
+}
+
+.navbar, footer {
+    background-color: #2e86c1;
+    color: white;
+    padding: 15px 30px;
+}
+div{
+    margin: 15px;
+}
+.navbar a {
+    color: white;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+main {
+    background-color: white; /* Card section */
+    margin: 40px auto;
+    padding: 30px;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+form input[type="submit"] {
+    background: #2e86c1;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+form input[type="submit"]:hover {
+    background: #21618c;
+}
+
+footer {
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.success {
+    color: green;
+    text-align: center;
+}
+.error {
+    color: red;
+    text-align: center;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+    background: url("../images/bg.jpg") no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+}
+
+.update-container {
+    background-color: rgba(255, 255, 255, 0.9);
+    max-width: 500px;
+    margin: 80px auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.update-form .form-group {
+    margin-bottom: 20px;
+}
+
+.update-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.update-form input[type="text"],
+.update-form input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: white;
+    transition: background 0.3s ease;
+}
+
+.btn.deposit {
+    background-color: #28a745;
+}
+
+.btn.deposit:hover {
+    background-color: #218838;
+}
+
+.btn.withdraw {
+    background-color: #dc3545;
+}
+
+.btn.withdraw:hover {
+    background-color: #c82333;
+}
