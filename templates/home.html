@@ -3,12 +3,12 @@
 {% set css_file = "pages.css" %}
 
 {% block content %}
-<h1>Welcome to the ATM App</h1>
+<h1>Welcome to the ATM App</h1> 
 
 {% if accounts %}
     <ul>
         {% for acc_no, info in accounts.items() %}
-            <li><strong>{{ acc_no }}</strong>: {{ info.name }} - ₹{{ info.balance }}</li>
+            <li><strong>••••{{ acc_no[-4:] }}</strong>: {{ info.name }} - ₹{{ info.balance }}</li>
         {% endfor %}
     </ul>
 {% else %}

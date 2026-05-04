@@ -12,11 +12,14 @@
 <form method="post">
     <label>Account No:</label>
     <input type="text" name="acc_no" required>
-    <input type="submit" value="Check">
+    <div style="margin-top:12px">
+        <button type="submit" class="btn btn-primary">Check</button>
+    </div>
 </form>
 
 {% if account %}
 <ul>
+    <li><strong>Account:</strong> ••••{{ account.acc_no[-4:] if account.acc_no is defined else '' }}</li>
     <li><strong>Account Holder:</strong> {{ account.name }}</li>
     <li><strong>Balance:</strong> ₹{{ account.balance }}</li>
 </ul>

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set css_file = "auth.css" %}
+{% set title = "Login" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Login to your ATM account</p>
+
+        {% if message %}
+        <p class="{{ msg_type }}">{{ message }}</p>
+        {% endif %}
+
+        <form method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="switch">
+            Don't have an account? <a href="/register">Register</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

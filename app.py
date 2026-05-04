@@ -181,27 +181,40 @@
     
 
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, session
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 app = Flask(__name__)
+app.secret_key = "atm_secret_key"
 
-# ---------- DATABASE CONNECTION ----------
-# def get_connection():
-#     return sqlite3.connect("atm.db", check_same_thread=False)
+# ---------------- DATABASE CONNECTION ----------------
 def get_connection():
-    return sqlite3.connect('/home/yourusername/atm-app/atm.db', check_same_thread=False)
+    if os.name == 'nt':  # Windows (local)
+        return sqlite3.connect('atm.db', check_same_thread=False)
+    else:  # PythonAnywhere
+        return sqlite3.connect('/home/sandhyachirumamilla/Atm_App/atm.db', check_same_thread=False)
 
-# ---------- INITIALIZE DATABASE ----------
+# ---------------- INIT DATABASE ----------------
 def db_init():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # ATM users table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS USERS (
             acc_no TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             balance INTEGER NOT NULL
+        )
+    ''')
+
+    # Auth users table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS AUTH_USERS (
+            username TEXT PRIMARY KEY,
+            password TEXT NOT NULL
         )
     ''')
 
@@ -211,9 +224,80 @@ def db_init():
 
 db_init()
 
-# ---------- HOME ----------
+# ---------------- LOGIN CHECK ----------------
+def is_logged_in():
+    return 'user' in session
+
+# ---------------- REGISTER ----------------
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        hashed = generate_password_hash(password)
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute(
+                "INSERT INTO AUTH_USERS (username, password) VALUES (?, ?)",
+                (username, hashed)
+            )
+            conn.commit()
+            msg = "Registered successfully"
+            msg_type = "success"
+        except:
+            msg = "User already exists"
+            msg_type = "error"
+
+        cursor.close()
+        conn.close()
+
+        return render_template('register.html', message=msg, msg_type=msg_type)
+
+    return render_template('register.html')
+
+# ---------------- LOGIN ----------------
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT password FROM AUTH_USERS WHERE username = ?",
+            (username,)
+        )
+        user = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        if user and check_password_hash(user[0], password):
+            session['user'] = username
+            return redirect('/')
+        else:
+            return render_template('login.html', message="Invalid credentials", msg_type="error")
+
+    return render_template('login.html')
+
+# ---------------- LOGOUT ----------------
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect('/login')
+
+# ---------------- HOME ----------------
 @app.route('/')
 def home():
+    if not is_logged_in():
+        return redirect('/login')
+
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -229,9 +313,12 @@ def home():
 
     return render_template('home.html', accounts=accounts)
 
-# ---------- CREATE ACCOUNT ----------
+# ---------------- CREATE ACCOUNT ----------------
 @app.route('/create', methods=['GET', 'POST'])
 def create():
+    if not is_logged_in():
+        return redirect('/login')
+
     if request.method == 'POST':
         acc_no = request.form.get('acc_no')
         name = request.form.get('name')
@@ -270,9 +357,12 @@ def create():
 
     return render_template('create.html')
 
-# ---------- CHECK BALANCE ----------
+# ---------------- CHECK BALANCE ----------------
 @app.route('/balance', methods=['GET', 'POST'])
 def balance():
+    if not is_logged_in():
+        return redirect('/login')
+
     if request.method == 'POST':
         acc_no = request.form.get('acc_no')
 
@@ -291,15 +381,18 @@ def balance():
 
         if account:
             bal, name = account
-            return render_template('balance.html', account={'name': name, 'balance': bal})
+            return render_template('balance.html', account={'name': name, 'balance': bal, 'acc_no': acc_no})
         else:
             return render_template('balance.html', message="Account does not exist", msg_type='error')
 
     return render_template('balance.html')
 
-# ---------- UPDATE ----------
+# ---------------- UPDATE ----------------
 @app.route('/update', methods=['GET', 'POST'])
 def update():
+    if not is_logged_in():
+        return redirect('/login')
+
     if request.method == 'POST':
         acc_no = request.form.get('acc_no')
         amount = int(request.form.get('amount'))
@@ -348,9 +441,12 @@ def update():
 
     return render_template('update.html')
 
-# ---------- DELETE ----------
+# ---------------- DELETE ----------------
 @app.route('/delete', methods=['GET', 'POST'])
 def delete():
+    if not is_logged_in():
+        return redirect('/login')
+
     if request.method == 'POST':
         acc_no = request.form.get('acc_no')
 
@@ -383,6 +479,6 @@ def delete():
 
     return render_template('delete.html')
 
-# ---------- RUN ----------
+# ---------------- RUN ----------------
 if __name__ == '__main__':
     app.run(debug=True, port=5007)
